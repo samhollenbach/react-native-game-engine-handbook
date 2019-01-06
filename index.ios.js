@@ -9,6 +9,7 @@ import PhysicsChapter from "./app/physics";
 import SensorsChapter from "./app/sensors";
 import ExamplesChapter from "./app/examples";
 import OpenGLChapter from "./app/opengl";
+import TTGamesChapter from "./app/new-games";
 
 EStyleSheet.build();
 
@@ -47,7 +48,8 @@ export default class RNGEHandbook extends Component {
               PhysicsChapter(this.mountScene),
               SensorsChapter(this.mountScene),
               OpenGLChapter(this.mountScene),
-              ExamplesChapter(this.mountScene)
+              ExamplesChapter(this.mountScene),
+              TTGamesChapter(this.mountScene)
             ]
           }}
         />
