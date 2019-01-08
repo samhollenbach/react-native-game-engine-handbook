@@ -12,8 +12,8 @@ const BORDER_WIDTH = Math.trunc(BODY_DIAMETER * 0.1);
 export class NodeRenderer extends Component {
 
 	render() {
-		const x = this.props.x - BODY_DIAMETER / 2;
-		const y = this.props.y - BODY_DIAMETER / 2;
+		const x = this.props.state.x - BODY_DIAMETER / 2;
+		const y = this.props.state.y - BODY_DIAMETER / 2;
 		return (
 			<View>
 				<View style={[css.head, { left: x, top: y }]} />
@@ -22,11 +22,16 @@ export class NodeRenderer extends Component {
 	}
 }
 
-export default (x, y) => {
+export default (props) => {
+
+	this.state = {
+		x: props.x,
+		y: props.y,
+	};
+
 	return{
+		state: state,
 		type: "node",
-		x: x,
-		y: y,
 		renderer: <NodeRenderer />
 	}
 }
