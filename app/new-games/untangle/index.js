@@ -1,7 +1,8 @@
 import React, { Component, PureComponent} from "react";
-import { StyleSheet, Dimensions, StatusBar } from "react-native";
+import { StyleSheet, Dimensions, StatusBar, View } from "react-native";
 import { GameEngine } from "react-native-game-engine";
-import {MoveFinger} from "./systems";
+import {MoveFinger, CheckIntersect, renderEdges, UpdateGame} from "./systems";
+import { Svg, Line } from 'react-native-svg';
 
 import Matter from "matter-js";
 import { LevelOne } from "./level";
@@ -15,26 +16,38 @@ export default class Untangle extends PureComponent {
   constructor() { 
     super();
 
-    var level = LevelOne();
+    var level = LevelOne(this);
 
     this.state = {
       level: level,
     };
   }
 
+
   render() {
 
     return (
-      <GameEngine style={styles.container} 
-        // onUpdate={this.onUpdate}
-        systems={[MoveFinger]}
-        entities={{
-          ...this.state.level.entities
-        }}
+      <View style={styles.bg}>
+      <Svg
+        key={'svg'}
+        width={WIDTH} 
+        height={HEIGHT}
       >
-        <StatusBar hidden={true} />
+        {renderEdges(this.state.level.edges)}
 
-      </GameEngine>
+        <GameEngine style={styles.container} 
+          systems={[MoveFinger, CheckIntersect, UpdateGame]}
+          entities={{
+            'untangle': {game: this},
+            ...this.state.level.entities
+          }}
+        >
+
+          <StatusBar hidden={true} />
+
+        </GameEngine>
+      </Svg>
+      </View>
     );
   }
 }
@@ -42,7 +55,10 @@ export default class Untangle extends PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF"
+    backgroundColor: "transparent"
+  },
+  bg: {
+    backgroundColor: "#87CEFA"
   }
 });
 
