@@ -2,10 +2,20 @@ import _ from "lodash";
 import { Box } from "./renderers";
 import Matter from "matter-js";
 
-let entityIDs = 0;
+import {world, width, height, wallSize, floorSize, paddleSize, puckSize, CONSTRAIN_PADDLE} from "./config";
 
-const distance = ([x1, y1], [x2, y2]) =>
-	Math.sqrt(Math.abs(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)));
+let scoreUser = 0;
+let scoreOpp = 0;
+
+const userScore = () => {
+    return scoreUser;
+}
+
+const oppScore = () => {
+    return scoreOpp;
+}
+
+
 
 const Physics = (state, { touches, time }) => {
 	let engine = state["physics"].engine;
@@ -45,10 +55,23 @@ const MovePaddle = (state, { touches }) => {
 	let move = touches.find(x => x.type === "move");
 
 	if (move) {
-        constraint.pointA = { 
-            x: constraint.pointA.x + move.delta.pageX,
-            y: constraint.pointA.y + move.delta.pageY
-        };
+
+        if (move.event.pageX >= wallSize + paddleSize/2
+            && move.event.pageX <= width - wallSize - paddleSize/2){
+
+            constraint.pointA.x = move.event.pageX;
+        }
+
+        var h = floorSize;
+        if (CONSTRAIN_PADDLE){
+            h = height / 2;
+        }
+        if (move.event.pageY >= h + paddleSize/2
+            && move.event.pageY <= height - floorSize - paddleSize/2){
+
+            constraint.pointA.y = move.event.pageY;   
+        }
+
     }
     
 
@@ -66,4 +89,30 @@ const MovePaddle = (state, { touches }) => {
 };
 
 
-export { Physics, MovePaddle};
+const CheckScore = (entities) => {
+
+    if (entities.puck.body.position.y <= 0){
+        var newPuck = Matter.Bodies.circle(width / 2, height / 2, puckSize/2, { frictionAir: 0.01, restitution: 0.8});
+        entities.puck.body = newPuck;
+        Matter.World.add(world, [newPuck]);
+        scoreUser++;
+        entities.game.forceUpdate();
+
+    }else if(entities.puck.body.position.y >= height){
+        var newPuck = Matter.Bodies.circle(width / 2, height / 2, puckSize/2, { frictionAir: 0.01, restitution: 0.8});
+        entities.puck.body = newPuck;
+        Matter.World.add(world, [newPuck]);
+        scoreOpp++;
+        entities.game.forceUpdate();
+    }
+
+    
+    
+
+    return entities;
+
+
+}
+
+
+export { Physics, MovePaddle, CheckScore, userScore, oppScore};
