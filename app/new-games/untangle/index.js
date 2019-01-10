@@ -1,5 +1,5 @@
 import React, { Component, PureComponent} from "react";
-import { StyleSheet, Dimensions, StatusBar, View } from "react-native";
+import { StyleSheet, Dimensions, StatusBar, View, Text } from "react-native";
 import { GameEngine } from "react-native-game-engine";
 import {MoveFinger, CheckIntersect, renderEdges, UpdateGame} from "./systems";
 import { Svg, Line } from 'react-native-svg';
@@ -23,6 +23,14 @@ export default class Untangle extends PureComponent {
     };
   }
 
+  getDisplayText(){
+    if (this.state.level.completed){
+      return "Success!";
+    }
+    return "Untangle the edges..";
+
+  }
+
 
   render() {
 
@@ -38,12 +46,14 @@ export default class Untangle extends PureComponent {
         <GameEngine style={styles.container} 
           systems={[MoveFinger, CheckIntersect, UpdateGame]}
           entities={{
-            'untangle': {game: this},
+            'untangle': {type: "game", game: this},
             ...this.state.level.entities
           }}
         >
 
           <StatusBar hidden={true} />
+
+          <Text style={styles.statusText}>{this.getDisplayText()}</Text>
 
         </GameEngine>
       </Svg>
@@ -59,6 +69,12 @@ const styles = StyleSheet.create({
   },
   bg: {
     backgroundColor: "#87CEFA"
+  },
+  statusText: {
+    textAlign: "center",
+    marginTop: 5,
+    fontSize: 24
+
   }
 });
 
