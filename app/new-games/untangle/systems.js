@@ -127,14 +127,10 @@ const EdgeChecker = (Edge1, Edge2) => {
         if (x1 != x2){
             s2 = Math.atan((y2 - y1) / (x2 - x1));
         }
-    
-        console.log(s1);
-        console.log(s2);
-        console.log("GWEHEWIO");
-        if (Math.abs(s1 - s2) < 0.1) {
+
+        if (Math.abs(s1 - s2) < 0.03) {
             Edge1.intersects = true;
             Edge2.intersects = true;
-            
         }
         return;
     }
