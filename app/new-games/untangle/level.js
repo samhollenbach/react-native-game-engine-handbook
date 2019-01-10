@@ -3,9 +3,7 @@ import { Dimensions } from "react-native";
 import Node from "./node";
 import Edge from "./edge";
 import {CheckIntersectEntitesOnly} from "./systems";
-
-
-const { width: WIDTH, height: HEIGHT } = Dimensions.get("window");
+import { WIDTH, HEIGHT } from "./config";
 
 const nNodes = 8;
 

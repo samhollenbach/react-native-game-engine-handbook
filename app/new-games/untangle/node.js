@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Dimensions } from "react-native";
 import { StaggeredMotion, spring } from "react-motion";
-
-const { width: WIDTH, height: HEIGHT } = Dimensions.get("window");
+import { WIDTH, HEIGHT } from "./config";
 
 const BODY_DIAMETER = Math.trunc(Math.max(WIDTH, HEIGHT) * 0.07);
 const BORDER_WIDTH = Math.trunc(BODY_DIAMETER * 0.1);

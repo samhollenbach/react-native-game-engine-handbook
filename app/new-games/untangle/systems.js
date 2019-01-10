@@ -4,14 +4,12 @@ import { WIDTH, HEIGHT, BODY_RAD } from "./config";
 import { Svg, Line } from 'react-native-svg';
 import Untangle from "./index";
 
-var movingNode;
 
 
 const renderEdges = (edges) => {
 
     let svg = [];
     let edgeRenders = [];
-
 
     for(var i = 0; i < edges.length; i++){
       var element = edges[i];
@@ -62,12 +60,8 @@ const UpdateGame = (entities) => {
     return entities;
 }
 
-
+var movingNode;
 const MoveFinger = (entities, { touches }) => {
-
-    //-- I'm choosing to update the game state (entities) directly for the sake of brevity and simplicity.
-    //-- There's nothing stopping you from treating the game state as immutable and returning a copy..
-    //-- Example: return { ...entities, t.id: { UPDATED COMPONENTS }};
   
     touches.filter(t => t.type === "move").forEach(t => {
         for (var key in entities) {
@@ -101,8 +95,6 @@ const MoveFinger = (entities, { touches }) => {
 
 const EdgeChecker = (Edge1, Edge2) => {
 
-    
-
     var x1 = Edge1.node1.state.x;
     var y1 = Edge1.node1.state.y;
     var x2 = Edge1.node2.state.x;
@@ -113,8 +105,6 @@ const EdgeChecker = (Edge1, Edge2) => {
     var y4 = Edge2.node2.state.y;
 
     var inter = true;
-
-    
 
     if (Edge1.node1 === Edge2.node1 || Edge1.node1 === Edge2.node2 ||
         Edge1.node2 === Edge2.node1 || Edge1.node2 === Edge2.node2){
@@ -154,30 +144,25 @@ const EdgeChecker = (Edge1, Edge2) => {
         return;
     }
 
-    // Return a object with the x and y coordinates of the intersection
-    let x = x1 + ua * (x2 - x1)
-    let y = y1 + ua * (y2 - y1)
-
-
-    
-
+    // // Return a object with the x and y coordinates of the intersection
+    // let x = x1 + ua * (x2 - x1)
+    // let y = y1 + ua * (y2 - y1)
 
     if (inter){
         Edge1.intersects = inter;
         Edge2.intersects = inter;
     }
-
 }
 
 const CheckIntersectEntitesOnly = (entities) => {
 
     var edges = [];
-    for (var k = 0; k < Object.keys(entities).length; k++){
+    Object.keys(entities).forEach(function(k){
         if (entities[k].type === "edge"){ 
             entities[k].intersects = false;
             edges.push(entities[k]);
         }
-    }
+    });
     var edgeCombos = [];
     for (var i = 0; i < Object.keys(edges).length-1; i++){    
         for (var j = i+1; j < Object.keys(edges).length; j++){
@@ -193,33 +178,10 @@ const CheckIntersectEntitesOnly = (entities) => {
 }
 
 const CheckIntersect = (entities, {touches}) => {
-
     touches.filter(t => t.type === "move").forEach(t => {
-        var edges = [];
-        
-        Object.keys(entities).forEach(function(k){
-            if (entities[k].type === "edge"){ 
-                entities[k].intersects = false;
-                edges.push(entities[k]);
-            }
-        });
-            
-        var edgeCombos = [];
-        for (var i = 0; i < Object.keys(edges).length-1; i++){    
-            for (var j = i+1; j < Object.keys(edges).length; j++){
-                edgeCombos.push({'e1': edges[i], 'e2': edges[j]});
-            }
-        }
-        edgeCombos.forEach(function(element){
-            EdgeChecker(element.e1, element.e2);
-        });
-
-
+        CheckIntersectEntitesOnly(entities);
     });
-
     return entities;
 }
-
-
   
 export { UpdateGame, MoveFinger, CheckIntersect, CheckIntersectEntitesOnly, renderEdges};

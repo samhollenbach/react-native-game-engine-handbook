@@ -1,16 +1,10 @@
 import React, { Component, PureComponent} from "react";
 import { StyleSheet, Dimensions, StatusBar, View, Text } from "react-native";
 import { GameEngine } from "react-native-game-engine";
-import {MoveFinger, CheckIntersect, renderEdges, UpdateGame} from "./systems";
+import { MoveFinger, CheckIntersect, renderEdges, UpdateGame} from "./systems";
 import { Svg, Line } from 'react-native-svg';
-
-import Matter from "matter-js";
+import { WIDTH, HEIGHT } from "./config";
 import { LevelOne } from "./level";
-
-const { width: WIDTH, height: HEIGHT } = Dimensions.get("window");
-
-Matter.Common.isElement = () => false; //-- Overriding this function because the original references HTMLElement
-
 
 export default class Untangle extends PureComponent {
   constructor() { 
@@ -28,7 +22,6 @@ export default class Untangle extends PureComponent {
       return "Success!";
     }
     return "Untangle the edges..";
-
   }
 
 
@@ -77,5 +70,3 @@ const styles = StyleSheet.create({
 
   }
 });
-
-// AppRegistry.registerComponent("Untangle", () => Untangle);
